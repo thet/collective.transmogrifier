@@ -4,9 +4,12 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.utils import Matcher, Condition
 
-def _get_default_encoding(site):
-    from Products.CMFPlone.utils import getSiteEncoding
-    return getSiteEncoding(site)
+def _get_default_encoding(context):
+    try:
+        from Products.CMFPlone.utils import getSiteEncoding
+        return getSiteEncoding(context)
+    except ImportError:
+        return 'utf-8'
 
 class CodecSection(object):
     classProvides(ISectionBlueprint)

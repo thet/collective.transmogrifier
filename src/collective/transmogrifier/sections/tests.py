@@ -6,12 +6,15 @@ import mimetools
 import urllib2
 import shutil
 import posixpath
+import pkg_resources
 from zope.component import provideUtility
 from zope.interface import classProvides, implements
 from zope.testing import doctest
 from collective.transmogrifier.interfaces import ISectionBlueprint, ISection
 from collective.transmogrifier.tests import setUp, tearDown
-from Products.Five import zcml
+from zope.configuration import xmlconfig
+from zope.configuration.config import ConfigurationMachine
+from zope.configuration.xmlconfig import registerCommonDirectives
 
 _marker = object()
 
@@ -217,8 +220,12 @@ def sectionsSetUp(test):
     test.globs['transmogrifier'] = Transmogrifier(test.globs['plone'])
 
     import collective.transmogrifier.sections
-    zcml.load_config('testing.zcml', collective.transmogrifier.sections)
 
+    context = ConfigurationMachine()
+    registerCommonDirectives(context)
+    xmlconfig.file('testing.zcml', collective.transmogrifier.sections,
+                   context=context)
+    context.execute_actions()
     provideUtility(SampleSource,
         name=u'collective.transmogrifier.sections.tests.samplesource')
     provideUtility(RangeSource,
@@ -410,7 +417,19 @@ def urlopenTearDown(test):
 
 
 def test_suite():
-    return unittest.TestSuite((
+    try:
+        pkg_resources.get_distribution('Products.CMFCore')
+    except pkg_resources.DistributionNotFound:
+        HAS_CMF = False
+    else:
+        HAS_CMF = True
+    try:
+        pkg_resources.get_distribution('lxml')
+    except pkg_resources.DistributionNotFound:
+        HAS_LXML = False
+    else:
+        HAS_LXML = True
+    return unittest.TestSuite(filter(bool, (
         unittest.makeSuite(SplitterConditionSectionTests),
         unittest.makeSuite(SplitterSectionTests),
         doctest.DocFileSuite(
@@ -422,6 +441,9 @@ def test_suite():
             '../../../../docs/source/sections/savepoint.rst',
             '../../../../docs/source/sections/logger.rst',
             '../../../../docs/source/sections/listsource.rst',
+            setUp=sectionsSetUp, tearDown=tearDown,
+            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
+        HAS_LXML and doctest.DocFileSuite(
             '../../../../docs/source/sections/xmlwalker.rst',
             setUp=sectionsSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
@@ -436,7 +458,7 @@ def test_suite():
             setUp=sectionsSetUp, tearDown=urlopenTearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF
             | doctest.ELLIPSIS),
-        doctest.DocFileSuite(
+        HAS_CMF and doctest.DocFileSuite(
             '../../../../docs/source/sections/constructor.rst',
             setUp=constructorSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
@@ -448,4 +470,4 @@ def test_suite():
             '../../../../docs/source/sections/breakpoint.rst',
             setUp=pdbSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS),
-    ))
+    )))
