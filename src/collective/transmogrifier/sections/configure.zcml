@@ -68,11 +68,13 @@
 <utility
     component=".listsource.ListSource"
     name="collective.transmogrifier.sections.listsource"
+    zcml:condition="installed zope.annotation"
     />
 
 <utility
     component=".listsource.ListAppender"
     name="collective.transmogrifier.sections.listappender"
+    zcml:condition="installed zope.annotation"
     />
 
 <configure zcml:condition="installed lxml">
