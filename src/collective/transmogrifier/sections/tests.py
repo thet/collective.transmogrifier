@@ -436,9 +436,11 @@ def test_suite():
         HAS_LXML = False
     else:
         HAS_LXML = True
+
     return unittest.TestSuite(filter(bool, (
         unittest.makeSuite(SplitterConditionSectionTests),
         unittest.makeSuite(SplitterSectionTests),
+
         HAS_EXPRESSION and doctest.DocFileSuite(
             '../../../../docs/source/sections/codec.rst',
             '../../../../docs/source/sections/inserter.rst',
@@ -449,33 +451,40 @@ def test_suite():
             '../../../../docs/source/sections/listsource.rst',
             setUp=sectionsSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
+
         HAS_TRANSACTION and doctest.DocFileSuite(
             '../../../../docs/source/sections/savepoint.rst',
             setUp=sectionsSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
+
         HAS_LXML and doctest.DocFileSuite(
             '../../../../docs/source/sections/xmlwalker.rst',
             setUp=sectionsSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
+
         HAS_EXPRESSION and doctest.DocFileSuite(
             '../../../../docs/source/sections/csvsource.rst',
             '../../../../docs/source/sections/dirwalker.rst',
             setUp=sectionsSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF
             | doctest.ELLIPSIS),
+
         HAS_EXPRESSION and doctest.DocFileSuite(
             '../../../../docs/source/sections/urlopener.rst',
             setUp=sectionsSetUp, tearDown=urlopenTearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF
             | doctest.ELLIPSIS),
+
         HAS_CMF and doctest.DocFileSuite(
             '../../../../docs/source/sections/constructor.rst',
             setUp=constructorSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
+
         HAS_CMF and doctest.DocFileSuite(
             '../../../../docs/source/sections/folders.rst',
             setUp=foldersSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
+
         HAS_EXPRESSION and doctest.DocFileSuite(
             '../../../../docs/source/sections/breakpoint.rst',
             setUp=pdbSetUp, tearDown=tearDown,
