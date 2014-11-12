@@ -3,11 +3,11 @@ import collections
 import copy
 
 from zope.interface import classProvides, implements
+from collective.transmogrifier.expression import Condition
 
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.utils import constructPipeline
-from collective.transmogrifier.utils import Condition
 
 # This splitter uses look-ahead condition sections to only advance sub-pipes
 # that can actually yield something, thus avoiding filling the itertools.tee

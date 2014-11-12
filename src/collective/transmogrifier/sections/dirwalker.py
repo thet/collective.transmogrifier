@@ -2,11 +2,11 @@ import os
 import posixpath
 
 from zope.interface import classProvides, implements
+from collective.transmogrifier.expression import Expression
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
 
 from collective.transmogrifier.utils import resolvePackageReferenceOrFile
-from collective.transmogrifier.utils import Expression
 from collective.transmogrifier.utils import pathsplit
 
 

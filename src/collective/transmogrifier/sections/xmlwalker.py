@@ -5,10 +5,10 @@ from lxml import html
 
 from zope.interface import classProvides
 from zope.interface import implements
+from collective.transmogrifier.expression import Expression
 
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
-from collective.transmogrifier.utils import Expression
 
 
 class XMLWalkerSection(object):

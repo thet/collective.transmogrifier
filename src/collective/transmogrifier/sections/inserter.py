@@ -1,7 +1,9 @@
 from zope.interface import classProvides, implements
+from collective.transmogrifier.expression import Condition
+from collective.transmogrifier.expression import Expression
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
-from collective.transmogrifier.utils import Expression, Condition
+
 
 class InserterSection(object):
     classProvides(ISectionBlueprint)

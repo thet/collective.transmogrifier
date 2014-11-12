@@ -1,10 +1,11 @@
 import logging
 
 from zope.interface import classProvides, implements
+from collective.transmogrifier.expression import Condition
 
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
-from collective.transmogrifier.utils import Matcher, Condition, pformat_msg
+from collective.transmogrifier.utils import Matcher, pformat_msg
 
 
 class LoggerSection(object):

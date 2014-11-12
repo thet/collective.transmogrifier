@@ -417,6 +417,13 @@ def urlopenTearDown(test):
 
 
 def test_suite():
+    from collective.transmogrifier.expression import HAS_EXPRESSION
+    try:
+        pkg_resources.get_distribution('transaction')
+    except pkg_resources.DistributionNotFound:
+        HAS_TRANSACTION = False
+    else:
+        HAS_TRANSACTION = True
     try:
         pkg_resources.get_distribution('Products.CMFCore')
     except pkg_resources.DistributionNotFound:
@@ -432,28 +439,31 @@ def test_suite():
     return unittest.TestSuite(filter(bool, (
         unittest.makeSuite(SplitterConditionSectionTests),
         unittest.makeSuite(SplitterSectionTests),
-        doctest.DocFileSuite(
+        HAS_EXPRESSION and doctest.DocFileSuite(
             '../../../../docs/source/sections/codec.rst',
             '../../../../docs/source/sections/inserter.rst',
             '../../../../docs/source/sections/manipulator.rst',
             '../../../../docs/source/sections/condition.rst',
             '../../../../docs/source/sections/splitter.rst',
-            '../../../../docs/source/sections/savepoint.rst',
             '../../../../docs/source/sections/logger.rst',
             '../../../../docs/source/sections/listsource.rst',
+            setUp=sectionsSetUp, tearDown=tearDown,
+            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
+        HAS_TRANSACTION and doctest.DocFileSuite(
+            '../../../../docs/source/sections/savepoint.rst',
             setUp=sectionsSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
         HAS_LXML and doctest.DocFileSuite(
             '../../../../docs/source/sections/xmlwalker.rst',
             setUp=sectionsSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
-        doctest.DocFileSuite(
+        HAS_EXPRESSION and doctest.DocFileSuite(
             '../../../../docs/source/sections/csvsource.rst',
             '../../../../docs/source/sections/dirwalker.rst',
             setUp=sectionsSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF
             | doctest.ELLIPSIS),
-        doctest.DocFileSuite(
+        HAS_EXPRESSION and doctest.DocFileSuite(
             '../../../../docs/source/sections/urlopener.rst',
             setUp=sectionsSetUp, tearDown=urlopenTearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF
@@ -462,11 +472,11 @@ def test_suite():
             '../../../../docs/source/sections/constructor.rst',
             setUp=constructorSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
-        doctest.DocFileSuite(
+        HAS_CMF and doctest.DocFileSuite(
             '../../../../docs/source/sections/folders.rst',
             setUp=foldersSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
-        doctest.DocFileSuite(
+        HAS_EXPRESSION and doctest.DocFileSuite(
             '../../../../docs/source/sections/breakpoint.rst',
             setUp=pdbSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS),
